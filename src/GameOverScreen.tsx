@@ -2,8 +2,8 @@
 import {css, jsx} from "@emotion/core";
 import styled from "@emotion/styled";
 import GameContainer from "./GameContainer";
-import {winnerOf} from "./Game";
 import {useEffect} from "react";
+import {winnerOf} from "./gameFunctions";
 
 export interface GameOverScreenProps {
 }

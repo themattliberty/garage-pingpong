@@ -1,21 +1,21 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import {fireEvent, render} from "@testing-library/react";
 import {newGame} from "./Game";
 
 let Subject: typeof import('./GameOverScreen').default;
 let GameContainer: typeof import('./GameContainer').default;
-let Game: typeof import('./Game');
+let winnerOf: typeof import('./gameFunctions').winnerOf;
 
 beforeEach(() => {
     GameContainer = td.replace('./GameContainer').default;
-    Game = td.replace('./Game');
+    ({winnerOf} = td.replace('./gameFunctions'));
     Subject = require('./GameOverScreen').default;
 });
 
 test('shows the winner', () => {
     const game = newGame();
     td.when(GameContainer.useContainer()).thenReturn({game});
-    td.when(Game.winnerOf(game)).thenReturn('Shakespeare');
+    td.when(winnerOf(game)).thenReturn('Shakespeare');
 
     const {getByText} = render(<Subject/>);
 

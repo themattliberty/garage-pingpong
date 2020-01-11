@@ -1,8 +1,8 @@
 import React from 'react';
 import GameScreen from "./GameScreen";
-import {isGameComplete} from "./Game";
 import GameOverScreen from "./GameOverScreen";
 import GameContainer from "./GameContainer";
+import {isGameComplete} from "./gameFunctions";
 
 export interface ScreenSwitcherProps {
 }

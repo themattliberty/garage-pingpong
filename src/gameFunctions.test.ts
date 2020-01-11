@@ -1,4 +1,5 @@
-import {isGameComplete, newGame} from "./Game";
+import {isGameComplete} from "./gameFunctions";
+import {newGame} from "./Game";
 
 describe('isGameComplete', () => {
     const subject = isGameComplete;
