@@ -4,6 +4,7 @@ import {useEffect, useRef} from "react";
 import styled from "@emotion/styled";
 import {XOR} from "ts-xor";
 import GameContainer from "./GameContainer";
+import {playScore} from "./soundPlayer";
 
 export interface GameScreenProps {
 }
@@ -48,8 +49,10 @@ export default function GameScreen(props: GameScreenProps) {
 
                 if (event.key === 'z') {
                     pointLeft();
+                    playScore();
                 } else if (event.key === 'x') {
                     pointRight();
+                    playScore();
                 }
             }
         }

@@ -3,17 +3,17 @@ import GameContainer from "./GameContainer";
 import {act, renderHook} from "@testing-library/react-hooks";
 import Game, {newGame} from "./Game";
 
-const subject = GameContainer;
+const Subject = GameContainer;
 
 function renderSubject(wrapper: React.FC) {
-    return renderHook(() => subject.useContainer(), {wrapper});
+    return renderHook(() => Subject.useContainer(), {wrapper});
 }
 
 function withInitialState(initialState?: Game): React.FC {
     return ({children}) => (
-        <subject.Provider initialState={initialState}>
+        <Subject.Provider initialState={initialState}>
             {children}
-        </subject.Provider>
+        </Subject.Provider>
     );
 }
 

@@ -3,17 +3,23 @@ import { render, fireEvent } from "@testing-library/react";
 import {newGame} from "./Game";
 
 let Subject: typeof import('./GameScreen').default;
-let GameContainer: typeof import('./GameContainer').default;
+let gameContext: any;
+let playScore: typeof import('./soundPlayer').playScore;
 
 beforeEach(() => {
-    GameContainer = td.replace('./GameContainer').default;
+    const GameContainer = td.replace('./GameContainer').default;
+    ({playScore} = td.replace('./soundPlayer'));
     Subject = require('./GameScreen').default;
+
+    gameContext = td.object(['pointLeft', 'pointRight', 'undo', 'playAgain']);
+    gameContext.game = newGame();
+    td.when(GameContainer.useContainer()).thenReturn(gameContext);
+
     jest.useFakeTimers();
 });
 
 test('shows the score', () => {
-    const game = {leftScore: 15, rightScore: 8};
-    td.when(GameContainer.useContainer()).thenReturn({game});
+    gameContext.game = {leftScore: 15, rightScore: 8};
 
     const {getByText} = render(<Subject/>);
 
@@ -22,8 +28,7 @@ test('shows the score', () => {
 });
 
 test('has undo button', () => {
-    const undo = td.function();
-    td.when(GameContainer.useContainer()).thenReturn({undo, game: newGame()});
+    const {undo} = gameContext;
     const {getByText} = render(<Subject/>);
 
     fireEvent.click(getByText('Undo Last Score'));
@@ -35,8 +40,7 @@ test.each([
     ['pointLeft', 'z'],
     ['pointRight', 'x'],
 ])('calls %s when %s is pressed', (handlerName, key) => {
-    const handler = td.function();
-    td.when(GameContainer.useContainer()).thenReturn({[handlerName]: handler, game: newGame()});
+    const {[handlerName]: handler} = gameContext;
     render(<Subject/>);
 
     fireEvent.keyDown(document, {key});
@@ -46,8 +50,7 @@ test.each([
 });
 
 test.each(['z', 'x'])('calls undo when %s is held', (key) => {
-    const undo = td.function();
-    td.when(GameContainer.useContainer()).thenReturn({undo, game: newGame()});
+    const {undo} = gameContext;
     render(<Subject/>);
 
     fireEvent.keyDown(document, {key});
@@ -60,3 +63,12 @@ test.each(['z', 'x'])('calls undo when %s is held', (key) => {
 });
 
 //TODO pay attention to only one button at a time
+
+test.each(['z', 'x'])('calls playScore when %s is pressed', (key) => {
+    render(<Subject/>);
+
+    fireEvent.keyDown(document, {key});
+    fireEvent.keyUp(document, {key});
+
+    td.verify(playScore());
+});
